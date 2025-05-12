@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polnilna postaja EV</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="charging-station-ui">
+        <!-- Statusna vrstica -->
+        <header class="status-bar">
+            <div class="date-time" id="dateTime">12.05.2025 12:00</div>
+        </header>
+
+        <!-- Glavni vsebinski del -->
+        <main class="main-content">
+            <!-- Enostavna plošča za polnjenje -->
+            <section class="charging-panel">
+                <div class="charging-status">
+                    <div class="status-indicator">
+                        <div class="status-icon" id="statusIcon"></div>
+                        <div class="status-text" id="statusText">Pripravljen na polnjenje</div>
+                    </div>
+                </div>
+
+                <div class="charging-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Čas polnjenja:</span>
+                        <span class="detail-value" id="chargingTime">00:00 h</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Stanje baterije:</span>
+                        <span class="detail-value" id="batteryPercentage">0 %</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Strošek polnjenja:</span>
+                        <span class="detail-value" id="currentCost">0.00 €</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Moč polnjenja:</span>
+                        <span class="detail-value" id="chargingRate">0 kW</span>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="start-button" id="startButton">Začni polnjenje</button>
+                    <button class="stop-button hidden" id="stopButton">Ustavi polnjenje</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
