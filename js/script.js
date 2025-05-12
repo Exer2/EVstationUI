@@ -47,11 +47,10 @@ function updateDateTime() {
     const year = now.getFullYear();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
     
-    dateTimeElement.textContent = `${day}.${month}.${year} ${hours}:${minutes}`;
+    dateTimeElement.textContent = `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
 }
-
-// ...existing code...
 
 // WebSocket connection
 let ws;
@@ -191,11 +190,11 @@ function updateChargingTime() {
     const elapsedMs = now - uiState.chargingStartTime;
     const elapsedSeconds = Math.floor(elapsedMs / 1000);
     
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+    const hours = Math.floor(elapsedSeconds / 3600);
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    const seconds = elapsedSeconds % 60;
     
-    chargingTime.textContent = `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')} h`;
+    chargingTime.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} h`;
 }
 
 // Simulate charging process
