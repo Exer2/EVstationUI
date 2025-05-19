@@ -10,6 +10,11 @@ const chargingRate = document.getElementById('chargingRate');
 const currentCost = document.getElementById('currentCost');
 const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
+const economyMode = document.getElementById('economyMode');
+const fastMode = document.getElementById('fastMode');
+const infoButton = document.getElementById('infoButton');
+const infoModal = document.getElementById('infoModal');
+const closeButton = document.querySelector('.close-button');
 
 // UI state
 const uiState = {
@@ -23,7 +28,18 @@ const uiState = {
     baseChargingRate: 11, // Base charging rate (average of 7-15 kW)
     maxVariation: 0.5,    // Maximum variation in kW (smaller for more consistency)
     pricePerKwh: 0.20,
-    simInterval: null
+    simInterval: null,
+    chargingMode: 'economy', // 'economy' or 'fast'
+    rates: {
+        economy: {
+            baseRate: 11,  // kW
+            pricePerKwh: 0.20 // €
+        },
+        fast: {
+            baseRate: 22,  // kW
+            pricePerKwh: 0.35 // €
+        }
+    }
 };
 
 // Initialize the application
@@ -35,8 +51,24 @@ function initApp() {
     startButton.addEventListener('click', startCharging);
     stopButton.addEventListener('click', stopCharging);
     
+    // Charging mode event listeners
+    economyMode.addEventListener('click', () => setChargingMode('economy'));
+    fastMode.addEventListener('click', () => setChargingMode('fast'));
+    
+    // Info button event listeners
+    infoButton.addEventListener('click', showInfoModal);
+    closeButton.addEventListener('click', closeInfoModal);
+    window.addEventListener('click', (e) => {
+        if (e.target === infoModal) {
+            closeInfoModal();
+        }
+    });
+    
     // Set initial state display
     updateUI();
+    
+    // Connect to Node-RED
+    connectToNodeRED();
 }
 
 // Update date and time
@@ -63,6 +95,19 @@ function initApp() {
     // Event listeners
     startButton.addEventListener('click', startCharging);
     stopButton.addEventListener('click', stopCharging);
+    
+    // Charging mode event listeners
+    economyMode.addEventListener('click', () => setChargingMode('economy'));
+    fastMode.addEventListener('click', () => setChargingMode('fast'));
+    
+    // Info button event listeners
+    infoButton.addEventListener('click', showInfoModal);
+    closeButton.addEventListener('click', closeInfoModal);
+    window.addEventListener('click', (e) => {
+        if (e.target === infoModal) {
+            closeInfoModal();
+        }
+    });
     
     // Set initial state display
     updateUI();
@@ -149,15 +194,20 @@ function startCharging() {
     uiState.energyDelivered = 0;
     uiState.batteryPercentage = uiState.initialBatteryPercentage;
     
-    // Set initial charging rate
-    uiState.chargingRate = uiState.baseChargingRate;
+    // Set initial charging rate based on selected mode
+    if (uiState.chargingMode === 'fast') {
+        uiState.chargingRate = uiState.rates.fast.baseRate;
+        uiState.pricePerKwh = uiState.rates.fast.pricePerKwh;
+    } else {
+        uiState.chargingRate = uiState.rates.economy.baseRate;
+        uiState.pricePerKwh = uiState.rates.economy.pricePerKwh;
+    }
     
     // Update UI elements
     startButton.classList.add('hidden');
     stopButton.classList.remove('hidden');
     statusIcon.style.backgroundColor = 'var(--success-color)';
     statusText.textContent = 'Polnjenje v teku';
-    
     // Simulate charging
     uiState.simInterval = setInterval(simulateCharging, 1000);
     
@@ -255,6 +305,56 @@ function updateUI() {
         statusText.textContent = 'Polnjenje v teku';
         statusIcon.style.backgroundColor = 'var(--success-color)';
     }
+}
+
+// Set charging mode (economy/fast)
+function setChargingMode(mode) {
+    if (mode === 'economy') {
+        uiState.chargingMode = 'economy';
+        economyMode.classList.add('active');
+        fastMode.classList.remove('active');
+        
+        // Update rates
+        uiState.baseChargingRate = uiState.rates.economy.baseRate;
+        uiState.pricePerKwh = uiState.rates.economy.pricePerKwh;
+    } else if (mode === 'fast') {
+        uiState.chargingMode = 'fast';
+        fastMode.classList.add('active');
+        economyMode.classList.remove('active');
+        
+        // Update rates
+        uiState.baseChargingRate = uiState.rates.fast.baseRate;
+        uiState.pricePerKwh = uiState.rates.fast.pricePerKwh;
+    }
+    
+    // If already charging, update the charging rate and info
+    if (uiState.charging) {
+        uiState.chargingRate = uiState.baseChargingRate;
+        chargingRate.textContent = `${uiState.chargingRate.toFixed(1)} kW`;
+        updateChargingInfo();
+    }
+    
+    // Send update to Node-RED if connected
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        sendStateToNodeRED();
+    }
+}
+
+// Show info modal with pricing and power details
+function showInfoModal() {
+    // Update values to ensure they match the current rates
+    document.getElementById('economyPower').textContent = `${uiState.rates.economy.baseRate} kW`;
+    document.getElementById('economyPrice').textContent = `${uiState.rates.economy.pricePerKwh.toFixed(2)} € / kWh`;
+    document.getElementById('fastPower').textContent = `${uiState.rates.fast.baseRate} kW`;
+    document.getElementById('fastPrice').textContent = `${uiState.rates.fast.pricePerKwh.toFixed(2)} € / kWh`;
+    
+    // Show modal
+    infoModal.style.display = 'block';
+}
+
+// Close info modal
+function closeInfoModal() {
+    infoModal.style.display = 'none';
 }
 
 // Initialize app when DOM is fully loaded
