@@ -89,6 +89,137 @@ body {
     font-weight: bold;
 }
 
+/* Charging mode selector */
+.charging-mode-selector {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.mode-title {
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.mode-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.mode-button {
+    padding: 12px 25px;
+    border-radius: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border: 2px solid var(--primary-color);
+    background-color: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-button:hover {
+    background-color: #f0f8ff;
+}
+
+.mode-button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.info-button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 10px;
+    background-color: var(--accent-color);
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.info-button:hover {
+    background-color: #e55c00;
+    transform: scale(1.1);
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 25px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: var(--dark-color);
+}
+
+.info-content {
+    margin-top: 20px;
+}
+
+.info-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.info-section h4 {
+    font-size: 1.3em;
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.info-section p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
 .charging-details {
     background-color: white;
     border-radius: 12px;
